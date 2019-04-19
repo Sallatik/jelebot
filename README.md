@@ -25,8 +25,8 @@ Add the following to your `pom.xml` file:
 	<!-- other dependencies... -->
 	<dependency>
 		<groupId>com.github.Sallatik</groupId>
-		<artifactId>predicate-parser</artifactId>
-		<version>1.0-RELEASE</version>
+		<artifactId>tgbot-annotation</artifactId>
+		<version>1.0-SNAPSHOT</version>
 	</dependency>
 </dependencies>
 ```
