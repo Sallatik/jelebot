@@ -54,12 +54,12 @@ All the information about relevant versions and particular artifacts can be foun
 
 - [Telegram Bot API](https://core.telegram.org/bots/api) - original documentation of the API
 - [Java Telegram Bot API](https://github.com/pengrad/java-telegram-bot-api/blob/master/README.md) - documentation of the underlying wrapper library.
-- [This file](https://github.com/Sallatik/tgbot-annotation/master/README.md#usage)
+- [This file](https://github.com/Sallatik/tgbot-annotation/blob/master/README.md#usage)
 - Javadoc - can be generated from source.
 
 ### Generating javadoc 
 
-1. Execute steps 1 and 2 from [Building from source](https://github.com/Sallatik/tgbot-annotation/master/README.md#building-from-source) instruction
+1. Execute steps 1 and 2 from [Building from source](https://github.com/Sallatik/tgbot-annotation/blob/master/README.md#building-from-source) instruction
 2. Generate documentation using `mvn javadoc:javadoc`
 3. Find your documentation in the target/site directory.
 4. Open index.html file using your favorite browser.
@@ -142,5 +142,5 @@ public static void main(String [] args) {
 
 ## Contribution
 
-You are welcome to contribute by rewieving my code and reporting the bugs.
+You are welcome to contribute by reviewing my code and reporting the bugs.
 
