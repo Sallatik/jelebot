@@ -1,6 +1,7 @@
 package sallat.tgbot;
 
 import com.pengrad.telegrambot.model.*;
+import net.bytebuddy.build.ToStringPlugin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -15,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static sallat.tgbot.Util.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class DispatcherTest {
@@ -90,8 +92,11 @@ public class DispatcherTest {
     @Test
     void MessageListenerTest() {
 
+        Message message = mock(Message.class);
+        when(message.chat()).thenReturn(mock(Chat.class));
+
         Update update = mock(Update.class);
-        when(update.message()).thenReturn(mock(Message.class));
+        when(update.message()).thenReturn(message);
 
         dispatcher.process(list(update));
 
@@ -136,8 +141,10 @@ public class DispatcherTest {
     @Test
     void ChannelPostListenerTest() {
 
+        Message message = mock(Message.class);
+        when(message.chat()).thenReturn(mock(Chat.class));
         Update update = mock(Update.class);
-        when(update.channelPost()).thenReturn(mock(Message.class));
+        when(update.channelPost()).thenReturn(message);
 
         dispatcher.process(list(update));
 
@@ -148,8 +155,11 @@ public class DispatcherTest {
     @Test
     void EditedMessageListenerTest() {
 
+        Message message = mock(Message.class);
+        when(message.chat()).thenReturn(mock(Chat.class));
+
         Update update = mock(Update.class);
-        when(update.editedMessage()).thenReturn(mock(Message.class));
+        when(update.editedMessage()).thenReturn(message);
 
         dispatcher.process(list(update));
 
@@ -160,8 +170,11 @@ public class DispatcherTest {
     @Test
     void EditedChannelPostListenerTest() {
 
+        Message message = mock(Message.class);
+        when(message.chat()).thenReturn(mock(Chat.class));
+
         Update update = mock(Update.class);
-        when(update.editedChannelPost()).thenReturn(mock(Message.class));
+        when(update.editedChannelPost()).thenReturn(message);
 
         dispatcher.process(list(update));
 
@@ -169,13 +182,20 @@ public class DispatcherTest {
         assertEquals(set("MessageListener"), listeners.getAllCalled());
     }
 
-    @SafeVarargs
-    final private <T> List<T> list(T... elements) {
-        return Stream.of(elements).collect(Collectors.toList());
-    }
+    @Test
+    void privateListenerTest() {
 
-    @SafeVarargs
-    final private <T> Set<T> set(T... elements) {
-        return Stream.of(elements).collect(Collectors.toSet());
+        Chat chat = mock(Chat.class);
+        when(chat.type()).thenReturn(Chat.Type.Private);
+
+        Message message = mock(Message.class);
+        when(message.chat()).thenReturn(chat);
+
+        Update update = mock(Update.class);
+        when(update.message()).thenReturn(message);
+
+        dispatcher.process(list(update));
+
+        assertEquals(set("MessageListener", "PrivateMessageListener"), listeners.getAllCalled());
     }
 }

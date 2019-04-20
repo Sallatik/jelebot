@@ -20,6 +20,8 @@ public interface Dispatcher extends UpdatesListener {
      * @return new <code>Dispatcher</code>
      */
     static Dispatcher create() {
-        return new DispatcherImpl();
+
+        ParserFactory factory = new ParserFactory();
+        return new DispatcherImpl(factory.createMessagePredicateParser());
     }
 }

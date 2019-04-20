@@ -26,9 +26,26 @@ Add the following to your `pom.xml` file:
 	<dependency>
 		<groupId>com.github.Sallatik</groupId>
 		<artifactId>tgbot-annotation</artifactId>
-		<version>1.0-SNAPSHOT</version>
+		<version>1.1-SNAPSHOT</version>
 	</dependency>
 </dependencies>
+```
+
+### Gradle
+
+Add the following to your `build.gradle` file:
+
+```groovy
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+	
+dependencies {
+    implementation 'com.github.Sallatik:tgbot-annotation:1.1-SNAPSHOT'
+}
 ```
 
 ### Building from source
@@ -41,12 +58,12 @@ To build this library from source, you will need Git and Maven installed in your
 4. Find your jar in the target directory.
 
 Note that to use this jar you will also have to downlod all dependencies and add them to your classpath.
-I highly recommend to use maven for managing dependencies instead of fucking with jars.
+I highly recommend to use gradle or maven for managing dependencies instead of messing with jars.
 
 ## Dependencies
 
 - [Java Telegram Bot Api](https://github.com/pengrad/java-telegram-bot-api)
-- [Prediate Parser](https://github.com/Sallatik/predicate-parser)
+- [Predicate Parser](https://github.com/Sallatik/predicate-parser)
 
 All the information about relevant versions and particular artifacts can be found in the `pom.xml` file.
 
@@ -54,12 +71,12 @@ All the information about relevant versions and particular artifacts can be foun
 
 - [Telegram Bot API](https://core.telegram.org/bots/api) - original documentation of the API
 - [Java Telegram Bot API](https://github.com/pengrad/java-telegram-bot-api/blob/master/README.md) - documentation of the underlying wrapper library.
-- [This file](https://github.com/Sallatik/tgbot-annotation/blob/master/README.md#usage)
+- [This file](#usage)
 - Javadoc - can be generated from source.
 
 ### Generating javadoc 
 
-1. Execute steps 1 and 2 from [Building from source](https://github.com/Sallatik/tgbot-annotation/blob/master/README.md#building-from-source) instruction
+1. Execute steps 1 and 2 from [Building from source](#building-from-source) instruction
 2. Generate documentation using `mvn javadoc:javadoc`
 3. Find your documentation in the target/site directory.
 4. Open index.html file using your favorite browser.
@@ -140,6 +157,50 @@ public static void main(String [] args) {
 }
 ```
 
+### Now, what if I only want to listen for private messages?
+
+Just make use of **filters**. 
+```java
+@MessageListener(filter="private")
+public void onPrivateMessage(Message message) {
+    System.out.println("got a private message");
+}
+```
+
+### Where do I find all available filters?
+
+In the [javadoc](#generating-javadoc) for `MessageListener` annotation.
+
+### Can I apply multiple filters?
+
+You can combine as many filters as you want using boolean operators.
+```java
+@MessageListener(filter="private or channel")
+public void onPrivateMessageOrChannelPost(Message message) {
+    System.out.println("got private message");
+    System.out.println("or a channel post, I'm not sure");
+}
+
+@MessageListener(filter="channel and photo")
+public void onChannelPostPhoto(Message message) {
+    System.out.println("got a photo from a channel");
+}
+
+@MessageListener(filter="(private and sticker) or ((group or supergroup) and text)")
+public void crazyFilteredListener(Message message) {
+    System.out.println("got a sticker in my dm");
+    System.out.println("or a text message in some group or supergroup");
+}
+
+@MessageListener(filter="reply xor text")
+public void confusedListener(Message message) {
+    System.out.println("got a message that is a reply but not text");
+    System.out.println("or a text message that is not a reply");
+    System.out.println("but not both nor neither for sure");
+}
+```
+
+You got the idea. Check the [javadoc](#generating-javadoc)!
 ## Contribution
 
 You are welcome to contribute by reviewing my code and reporting the bugs.

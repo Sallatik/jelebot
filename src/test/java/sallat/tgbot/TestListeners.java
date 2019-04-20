@@ -53,6 +53,12 @@ public class TestListeners {
         allCalled.add(lastCalled);
     }
 
+    @MessageListener(filter = "private")
+    public void onPrivateMessage(Message message) {
+        lastCalled = "PrivateMessageListener";
+        allCalled.add(lastCalled);
+    }
+
     public String getLastCalled() {
         return lastCalled;
     }

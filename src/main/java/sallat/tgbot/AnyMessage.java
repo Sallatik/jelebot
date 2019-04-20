@@ -8,6 +8,7 @@ class AnyMessage {
 
     private Message message;
     private boolean edited;
+    private boolean channelPost;
 
     public static Predicate<AnyMessage> from(Predicate<Message> predicate) {
 
@@ -22,8 +23,13 @@ class AnyMessage {
         return edited;
     }
 
-    public AnyMessage(Message message, boolean edited) {
+    public boolean isChannelPost() {
+        return channelPost;
+    }
+
+    public AnyMessage(Message message, boolean channelPost, boolean edited) {
         this.message = message;
+        this.channelPost = channelPost;
         this.edited = edited;
     }
 }

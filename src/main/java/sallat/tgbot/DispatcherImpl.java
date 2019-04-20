@@ -2,6 +2,7 @@ package sallat.tgbot;
 
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.*;
+import sallat.parser.PredicateParser;
 import sallat.tgbot.annotation.*;
 
 import java.lang.annotation.Annotation;
@@ -14,6 +15,8 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 class DispatcherImpl implements Dispatcher {
+
+    private PredicateParser<AnyMessage> messagePredicateParser;
 
     private Collection<Consumer<AnyMessage>> messageListeners = new ArrayList<>();
     private Collection<Consumer<InlineQuery>> inlineQueryListeners = new ArrayList<>();
@@ -33,7 +36,10 @@ class DispatcherImpl implements Dispatcher {
             if (method.isAnnotationPresent(MessageListener.class)) {
 
                 requireSingleParamOfType(method, Message.class, MessageListener.class);
-                messageListeners.add(createMessageListener(method, obj, message -> true));
+                MessageListener annotation = method.getAnnotation(MessageListener.class);
+                String filter = annotation.filter();
+                Predicate<AnyMessage> predicate = messagePredicateParser.parse(filter);
+                messageListeners.add(createMessageListener(method, obj, predicate));
                 listenersFound = true;
             }
 
@@ -130,19 +136,19 @@ class DispatcherImpl implements Dispatcher {
             if (update.message() != null) {
 
                 Message message = update.message();
-                messageListeners.forEach(listener -> listener.accept(new AnyMessage(message, false)));
+                messageListeners.forEach(listener -> listener.accept(new AnyMessage(message, false, false)));
             } else if (update.editedMessage() != null) {
 
                 Message editedMessage = update.editedMessage();
-                messageListeners.forEach(listener -> listener.accept(new AnyMessage(editedMessage, true)));
+                messageListeners.forEach(listener -> listener.accept(new AnyMessage(editedMessage, false,true)));
             } else if (update.channelPost() != null) {
 
                 Message channelPost = update.channelPost();
-                messageListeners.forEach(listener -> listener.accept(new AnyMessage(channelPost, false)));
+                messageListeners.forEach(listener -> listener.accept(new AnyMessage(channelPost,true, false)));
             } else if (update.editedChannelPost() != null) {
 
                 Message editedChannelPost = update.editedChannelPost();
-                messageListeners.forEach(listener -> listener.accept(new AnyMessage(editedChannelPost, true)));
+                messageListeners.forEach(listener -> listener.accept(new AnyMessage(editedChannelPost, true, true)));
             } else if (update.inlineQuery() != null) {
 
                 InlineQuery inlineQuery = update.inlineQuery();
@@ -171,5 +177,9 @@ class DispatcherImpl implements Dispatcher {
         });
 
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
+    }
+
+    DispatcherImpl(PredicateParser<AnyMessage> messagePredicateParser) {
+        this.messagePredicateParser = messagePredicateParser;
     }
 }
