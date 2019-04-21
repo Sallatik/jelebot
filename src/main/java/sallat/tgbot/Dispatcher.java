@@ -21,7 +21,10 @@ public interface Dispatcher extends UpdatesListener {
      */
     static Dispatcher create() {
 
-        ParserFactory factory = new ParserFactory();
-        return new DispatcherImpl(factory.createMessagePredicateParser());
+        ParserFactory parserFactory = new ParserFactory();
+        ListenerFactory listenerFactory = new ListenerFactoryImpl(parserFactory.createMessagePredicateParser());
+        ListenerManager listenerManager = new ListenerManagerImpl();
+
+        return new DispatcherImpl(listenerFactory, listenerManager);
     }
 }
