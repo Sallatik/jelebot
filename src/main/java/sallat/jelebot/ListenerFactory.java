@@ -1,11 +1,11 @@
-package sallat.tgbot;
+package sallat.jelebot;
 
 import com.pengrad.telegrambot.model.*;
 
 import java.lang.reflect.Method;
 import java.util.function.Consumer;
 
-public interface ListenerFactory {
+interface ListenerFactory {
     
     Consumer<AnyMessage> createMessageListener(Object obj, Method method);
     

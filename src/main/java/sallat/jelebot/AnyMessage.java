@@ -1,4 +1,4 @@
-package sallat.tgbot;
+package sallat.jelebot;
 
 import com.pengrad.telegrambot.model.Message;
 

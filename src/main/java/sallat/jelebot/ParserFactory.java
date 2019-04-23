@@ -1,4 +1,4 @@
-package sallat.tgbot;
+package sallat.jelebot;
 
 import com.pengrad.telegrambot.model.Chat;
 import sallat.parser.CasePolicy;
@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 import static sallat.parser.Operators.*;
-import static sallat.tgbot.AnyMessage.from;
+import static sallat.jelebot.AnyMessage.from;
 
 class ParserFactory {
 

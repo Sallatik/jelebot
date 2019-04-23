@@ -1,4 +1,4 @@
-package sallat.tgbot;
+package sallat.jelebot;
 
 import java.util.List;
 import java.util.Set;

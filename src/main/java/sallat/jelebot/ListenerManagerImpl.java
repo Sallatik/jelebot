@@ -1,4 +1,4 @@
-package sallat.tgbot;
+package sallat.jelebot;
 
 import com.pengrad.telegrambot.model.*;
 
@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Consumer;
 
-public class ListenerManagerImpl implements ListenerManager {
+class ListenerManagerImpl implements ListenerManager {
 
     private Collection<Consumer<AnyMessage>> messageListeners = new ArrayList<>();
     private Collection<Consumer<InlineQuery>> inlineQueryListeners = new ArrayList<>();

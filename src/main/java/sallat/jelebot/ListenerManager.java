@@ -1,10 +1,10 @@
-package sallat.tgbot;
+package sallat.jelebot;
 
 import com.pengrad.telegrambot.model.*;
 
 import java.util.function.Consumer;
 
-public interface ListenerManager {
+interface ListenerManager {
 
     void onAnyMessage(AnyMessage message);
 

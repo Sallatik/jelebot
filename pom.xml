@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.Sallatik</groupId>
-    <artifactId>tgbot-annotation</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <artifactId>jelebot</artifactId>
+    <version>1.2-SNAPSHOT</version>
 
     <build>
         <plugins>

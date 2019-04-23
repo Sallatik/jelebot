@@ -1,4 +1,4 @@
-package sallat.tgbot.annotation;
+package sallat.jelebot.annotation.listeners;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Listener for all incoming <code>Message</code> objects.<br>
+ * Annotated method will receive incoming <code>Message</code> objects.<br>
  * Those objects will be retrieved from the following fields of the <code>Update</code>:
  * <ul>
  *     <li><code>message</code></li>
@@ -14,7 +14,11 @@ import java.lang.annotation.Target;
  *     <li><code>channel_post</code></li>
  *     <li><code>edited_channel_post</code></li>
  * </ul>
- * All annotated methods must have one parameter of type {@link com.pengrad.telegrambot.model.Message}<br>
+ * <h2>Parameters</h2>
+ * Annotated method is required to declare one parameter of type {@link com.pengrad.telegrambot.model.Message}<br>
+ * <h2>Return type</h2>
+ * A method can have any return type. If a return type is a telegram request, i.e. subclass of {@link com.pengrad.telegrambot.request.BaseRequest},
+ * the returned value will be executed.
  * <h2 id="filter">Filters</h2>
  * To filter incoming messages by a particular set of properties, specify a filter string using <code>filter</code> element.
  * Filter string must consist of keywords, i.e <i>filters</i> and boolean operators, delimited by whitespace and parentheses.<br>

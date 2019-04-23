@@ -1,4 +1,4 @@
-# Telegram Bot Annotations for Java
+# Jelebot - Telegram bot annotations for java
 
 This little annotation-based framework aims to simplify development of telegram bots, and make your code cleaner.
 It is built on top of [Pengrad's library](https://github.com/pengrad/java-telegram-bot-api) for interactions with Telegram Bots API.
@@ -25,8 +25,8 @@ Add the following to your `pom.xml` file:
 	<!-- other dependencies... -->
 	<dependency>
 		<groupId>com.github.Sallatik</groupId>
-		<artifactId>tgbot-annotation</artifactId>
-		<version>1.1-SNAPSHOT</version>
+		<artifactId>jelebot</artifactId>
+		<version>1.2-SNAPSHOT</version>
 	</dependency>
 </dependencies>
 ```
@@ -42,9 +42,9 @@ allprojects {
         maven { url 'https://jitpack.io' }
     }
 }
-	
+
 dependencies {
-    implementation 'com.github.Sallatik:tgbot-annotation:1.1-SNAPSHOT'
+    implementation 'com.github.Sallatik:jelebot:1.2-SNAPSHOT'
 }
 ```
 
@@ -52,8 +52,8 @@ dependencies {
 
 To build this library from source, you will need Git and Maven installed in your system.
 
-1. Clone this repo: `git clone https://github.com/Sallatik/tgbot-annotation.git`
-2. Change directory to the project root: `cd tgbot-annotation`
+1. Clone this repo: `git clone https://github.com/Sallatik/jelebot.git`
+2. Change directory to the project root: `cd jelebot`
 3. Build the project with Maven: `mvn package`
 4. Find your jar in the target directory.
 
@@ -83,124 +83,97 @@ All the information about relevant versions and particular artifacts can be foun
 
 ## Usage
 
-Creating telegram bots never was that simple. All you need to do:
+### Listeners
 
-- Create a class with annotated listener methods. Annotations in `sallat.tgbot.annotation` allow you to react to different kinds of events.
+Use annotations in package `sallat.jelebot.annotation.listeners` to declare your methods as listeners.
 ```java
-import com.pengrad.telegrambot.model.Message;
-import sallat.tgbot.annotation.*;
+@MessageListener
+void onMessage(Message message) {
+    // handle incoming message
+}
 
-public class ConsoleLoggerBot {
-
-	@MessageListener
-	public void onMessage(Message message) {
-
-		System.out.println(message.text());
-	}
+@InlineQueryListener
+void onInlineQuery(InlineQuery callbackQuery) {
+    // handle inline query
 }
 ```
-
-- Create a `Dispatcher` instance and register your listeners.
+You can declare multiple listeners of the same type.  
+Every annotation has it's own requirements for the method signature. See [javadoc](#generating-javadoc).
+#### Filters
+`MessageListener` annotation has `filter` element that allows to filter messages by their origin, content or other properties.  
+See [javadoc](#generating-javadoc) for complete syntax reference.
 ```java
-Dispatcher dispatcher = Dispatcher.create();
-dispatcher.register(new ConsoleLoggerBot());
-```
-
-- Create a `TelegramBot` instance and set the dispatcher as an updates listener.
-```java
-new TelegramBot("your-token-from-@BotFather")
-	.setUpdatesListener(dispatcher);
-```
-
-- That's it!
-
-### But I want to do %stuff-bots-ususally-do%, not just print messages to console!
-
-No problem! The underlying Telegram Bot Api Java library allows you to do pretty much everything a bot can possibly do.
-Check the official [documentation](https://github.com/pengrad/java-telegram-bot-api#usage).
-
-I will just show one example on how to use it together with this framework:
-
-Class with listeners: 
-```java
-import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.Message;
-import com.pengrad.telegrambot.request.SendMessage;
-import sallat.tgbot.annotation.*;
-
-public class HelloSayerBot {
-
-	private TelegramBot bot;
-
-	@MessageListener
-	public void sayHello(Message message) {
-
-		bot.execute(new SendMessage(message.chat().id(), "Hello!"));
-	}
-
-	public HelloSayerBot(TelegramBot bot) {
-
-		this.bot = bot;
-	}
+@MessageListener(filter = "private & photo & caption")
+void onPrivatePhotoWithCaption(Message message) {
+    // this method will only be called
+    // for photos with caption sent via private messages
 }
 ```
-
-The main method:
+#### Return value
+If your methods declares `BaseRequest` or it's subclass as a return type, the returned request will be executed right after the listener returns.
 ```java
-public static void main(String [] args) {
-
-	TelegramBot bot = new TelegramBot("your-token-from-@BotFather");
-	HelloSayerBot listeners = new HelloSayerBot(bot);
-	Dispatcher dispatcher = Dispatcher.create();
-	dispatcher.register(listeners);
-	bot.setUpdatesListener(dispatcher);
+@CallbackQueryListener
+AnswerCallbackQuery onCallbackQuery(CallbackQuery query) {
+    // this request will be executed
+    return new AnswerCallbackQuery(query.id())
+        .text("You pressed a button");
 }
 ```
-
-### Now, what if I only want to listen for private messages?
-
-Just make use of **filters**. 
+However, if you want to handle telegram's response to your request, you should execute it manually with `TelegramBot` instance.
+### Injection
+Jelebot will inject a `TelegramBot` instance, 
+used to execute requests into the fields or setter methods annotated with `@InjectTelegramBot`
 ```java
-@MessageListener(filter="private")
-public void onPrivateMessage(Message message) {
-    System.out.println("got a private message");
+@InjectTelegramBot
+private TelegramBot bot;
+
+@MessageListener(filter = "private & text")
+void echo(Message messsage) {
+    SendMessage request = new SendMessage(message.chat().id(), message.text());
+    SendResponse response = bot.execute(request);
+    // handle the response
 }
 ```
-
-### Where do I find all available filters?
-
-In the [javadoc](#generating-javadoc) for `MessageListener` annotation.
-
-### Can I apply multiple filters?
-
-You can combine as many filters as you want using boolean operators.
+### Jelebot
+Use `Jelebot` class to start your bot.
+1. Create an instance:
 ```java
-@MessageListener(filter="private or channel")
-public void onPrivateMessageOrChannelPost(Message message) {
-    System.out.println("got private message");
-    System.out.println("or a channel post, I'm not sure");
-}
-
-@MessageListener(filter="channel and photo")
-public void onChannelPostPhoto(Message message) {
-    System.out.println("got a photo from a channel");
-}
-
-@MessageListener(filter="(private and sticker) or ((group or supergroup) and text)")
-public void crazyFilteredListener(Message message) {
-    System.out.println("got a sticker in my dm");
-    System.out.println("or a text message in some group or supergroup");
-}
-
-@MessageListener(filter="reply xor text")
-public void confusedListener(Message message) {
-    System.out.println("got a message that is a reply but not text");
-    System.out.println("or a text message that is not a reply");
-    System.out.println("but not both nor neither for sure");
+Jelebot jelebot = Jelebot.create("bot-token");
+```
+2. Instantinate your annotated classes and register them.
+```java
+jelebot.register(new MyBotModule())
+    // ...
+    .register(new AnotherBotModule());
+```
+3. Start the bot.
+```java
+jelebot.start();
+```
+## Example
+Here is a little bot that can rate your cat pics.
+```java
+class RateMyCatBot {
+    
+    @InjectTelegramBot
+    private TelegramBot bot;
+    
+    @MessageListener("private & photo & caption")
+    void rateCat(Message message) {
+        if (message.caption().contains("/rate")) {
+            SendMessage request = SendMessage(message.chat().id(),
+                "Your cat is awesome! 10/10");
+            bot.execute(request);
+        }
+    }
+    
+    public static void main(String [] args) {
+        Jelebot.create("bot-token")
+            .register(new RateMyCatBot())
+            .start();
+    }
 }
 ```
-
-You got the idea. Check the [javadoc](#generating-javadoc)!
 ## Contribution
 
 You are welcome to contribute by reviewing my code and reporting the bugs.
