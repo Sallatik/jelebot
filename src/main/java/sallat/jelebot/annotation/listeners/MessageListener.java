@@ -26,6 +26,7 @@ import java.lang.annotation.Target;
  * <table style="width=100%;border:1px solid black;">
  *     <caption style="text-align:left;">Filters</caption>
  *     <tr><th>Filter</th><th>Description</th></tr>
+ *     <tr><td><i><b>/%command%</b></i></td><td>A text message starting with "/%command%" or a message with caption starting with "/%command%"</td></tr>
  *     <tr><td><i><b>any</b></i></td><td>Any message or channel post<br>Default value of the <code>filter</code> element.</td></tr>
  *     <tr><td><i><b>edit</b></i></td><td>Edited message or channel post.</td></tr>
  *     <tr><td><i><b>channel</b></i></td><td>A channel post.</td></tr>
@@ -84,7 +85,6 @@ public @interface MessageListener {
 
     /**
      * A filter string. <a href="#filter">More on filters.</a>
-     * @return
      */
     String filter() default "any";
 }

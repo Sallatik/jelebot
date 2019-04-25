@@ -158,13 +158,11 @@ class RateMyCatBot {
     @InjectTelegramBot
     private TelegramBot bot;
     
-    @MessageListener("private & photo & caption")
-    void rateCat(Message message) {
-        if (message.caption().contains("/rate")) {
-            SendMessage request = SendMessage(message.chat().id(),
-                "Your cat is awesome! 10/10");
-            bot.execute(request);
-        }
+    @MessageListener("private & photo & /rate")
+    SendMessage rateCat(Message message) { 
+        
+        return SendMessage(message.chat().id(),
+        "Your cat is awesome! 10/10");
     }
     
     public static void main(String [] args) {

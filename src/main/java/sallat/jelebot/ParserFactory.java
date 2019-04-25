@@ -8,6 +8,7 @@ import sallat.parser.SimplePredicateParser;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static sallat.parser.Operators.*;
@@ -20,7 +21,7 @@ class ParserFactory {
         return SimplePredicateParser.<AnyMessage>builder()
                 .setCasePolicy(CasePolicy.TO_LOWER_CASE)
                 .setOperatorMap(createOperatorsMap())
-                .setPredicateMap(createPredicateMap())
+                .setPredicateMapping(createPredicateMap())
                 .build();
     }
 
@@ -45,7 +46,7 @@ class ParserFactory {
         return operatorsMap;
     }
 
-    private Map<String, Predicate<AnyMessage>> createPredicateMap() {
+    private Function<String, Predicate<AnyMessage>> createPredicateMap() {
 
         Map<String, Predicate<AnyMessage>> predicateMap = new HashMap<>();
 
@@ -201,6 +202,14 @@ class ParserFactory {
                 message.passportData() != null
         ));
 
-        return predicateMap;
+        return token -> {
+
+            if (token.startsWith("/"))
+                return message ->
+                        (message.getMessage().text() != null && message.getMessage().text().startsWith(token)) ||
+                                (message.getMessage().caption() != null && message.getMessage().caption().startsWith(token));
+
+            else return predicateMap.get(token);
+        };
     }
 }
