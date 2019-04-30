@@ -10,6 +10,7 @@ import sallat.jelebot.update.UpdateSource;
  * <ol type="1">
  *     <li>Obtain an instance using <code>create</code> factory method.</li>
  *     <li>Register the all modules of your bot using <code>register</code> method.</li>
+ *     <li>Set the appropriate update source.</li>
  *     <li>Start getting updates with <code>start</code> method.</li>
  * </ol>
  */
