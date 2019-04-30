@@ -17,7 +17,7 @@ Add the following to your `pom.xml` file:
 	<!-- other repositories... --> 
 	<repository>
 		<id>jitpack.io</id>
-		<url>https://jitpack.io</url>
+		<proxyURL>https://jitpack.io</proxyURL>
 	</repository>
 </repositories>
 
@@ -39,7 +39,7 @@ Add the following to your `build.gradle` file:
 allprojects {
     repositories {
         ...
-        maven { url 'https://jitpack.io' }
+        maven { proxyURL 'https://jitpack.io' }
     }
 }
 

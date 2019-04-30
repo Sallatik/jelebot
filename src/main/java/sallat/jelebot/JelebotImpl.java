@@ -1,13 +1,15 @@
 package sallat.jelebot;
 
 import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.UpdatesListener;
+import sallat.jelebot.update.UpdateListener;
+import sallat.jelebot.update.UpdateSource;
 
 class JelebotImpl implements Jelebot {
 
     private TelegramBot bot;
-    private UpdatesListener updatesListener;
+    private UpdateListener updateListener;
     private RegisterService registerService;
+    private UpdateSource updateSource;
 
     @Override
     public Jelebot register(Object obj) {
@@ -27,13 +29,21 @@ class JelebotImpl implements Jelebot {
     @Override
     public void start() {
 
-        bot.setUpdatesListener(updatesListener);
+        if (updateSource == null)
+            throw new IllegalStateException("Update source must not be null");
+
+        updateSource.startGettingUpdates(updateListener, bot);
     }
 
-    public JelebotImpl(TelegramBot bot, UpdatesListener updatesListener, RegisterService registerService) {
+    @Override
+    public void setUpdateSource(UpdateSource updateSource) {
+        this.updateSource = updateSource;
+    }
+
+    public JelebotImpl(TelegramBot bot, UpdateListener updateListener, RegisterService registerService) {
 
         this.bot = bot;
-        this.updatesListener = updatesListener;
+        this.updateListener = updateListener;
         this.registerService = registerService;
     }
 }

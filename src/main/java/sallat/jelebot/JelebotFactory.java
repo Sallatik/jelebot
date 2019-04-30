@@ -1,7 +1,7 @@
 package sallat.jelebot;
 
 import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.UpdatesListener;
+import sallat.jelebot.update.UpdateListener;
 import sallat.parser.PredicateParser;
 
 class JelebotFactory {
@@ -16,9 +16,9 @@ class JelebotFactory {
         ListenerFactory listenerFactory = new ListenerFactoryImpl(predicateParser, bot);
         ListenerManager listenerManager = new ListenerManagerImpl();
         RegisterService registerService = new RegisterServiceImpl(listenerFactory, listenerManager, bot);
-        UpdatesListener updatesListener = new DispatcherUpdatesListener(listenerManager);
+        UpdateListener updateListener = new DispatcherUpdateListener(listenerManager);
 
-        return new JelebotImpl(bot, updatesListener, registerService);
+        return new JelebotImpl(bot, updateListener, registerService);
     }
 
     static Jelebot createJelebot(String token) {

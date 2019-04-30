@@ -1,6 +1,8 @@
 package sallat.jelebot;
 
 import com.pengrad.telegrambot.TelegramBot;
+import sallat.jelebot.update.UpdateListener;
+import sallat.jelebot.update.UpdateSource;
 
 /**
  * Central class in the framework used to assemble your telegram bot modules and run them as a telegram bot.<br>
@@ -32,10 +34,15 @@ public interface Jelebot {
     Jelebot register(Object... objects);
 
     /**
-     * Start getting updates from telegram.
+     * Start getting updates from telegram, using specified <code>UpdateSource</code>.
+     * @throws IllegalStateException if the update source is null.
      */
     void start();
 
+    /**
+     * @param updateSource
+     */
+    void setUpdateSource(UpdateSource updateSource);
     /**
      * Create new <code>Jelebot</code> instance with an existing <code>TelegramBot</code>.
      * @param bot existing <code>TelegramBot</code>
@@ -46,6 +53,7 @@ public interface Jelebot {
 
         return JelebotFactory.createJelebot(bot);
     }
+
 
     /**
      * Create new <code>Jelebot</code> instance for your bot token.<br>

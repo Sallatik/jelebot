@@ -1,27 +1,26 @@
 package sallat.jelebot;
 
-import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.ShippingQuery;
 import com.pengrad.telegrambot.model.Update;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import sallat.jelebot.update.UpdateListener;
 
 import static org.mockito.Mockito.*;
-import static sallat.jelebot.Util.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-public class DispatcherUpdatesListenerTest {
+public class DispatcherUpdateListenerTest {
 
-    private UpdatesListener updatesListener;
+    private UpdateListener updatesListener;
     private ListenerManager mockedManager;
 
     @BeforeEach
     void init() {
 
         mockedManager = mock(ListenerManager.class);
-        updatesListener = new DispatcherUpdatesListener(mockedManager);
+        updatesListener = new DispatcherUpdateListener(mockedManager);
     }
 
     @Test
@@ -35,7 +34,9 @@ public class DispatcherUpdatesListenerTest {
         when(mockedUpdate2.message()).thenReturn(mock(Message.class));
         when(mockedUpdate3.message()).thenReturn(mock(Message.class));
 
-        updatesListener.process(list(mockedUpdate1, mockedUpdate2, mockedUpdate3));
+        updatesListener.onUpdate(mockedUpdate1);
+        updatesListener.onUpdate(mockedUpdate2);
+        updatesListener.onUpdate(mockedUpdate3);
 
         verify(mockedManager, times(1)).onShippingQuery(any());
         verify(mockedManager, times(2)).onAnyMessage(any());
