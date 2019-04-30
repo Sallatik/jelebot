@@ -21,16 +21,23 @@ class ListenerFactoryImpl implements ListenerFactory {
     public Consumer<AnyMessage> createMessageListener(Object obj, Method method) {
 
         requireSingleParamOfType(method, Message.class, MessageListener.class);
-        MessageListener annotation = method.getAnnotation(MessageListener.class);
-        String filter = annotation.filter();
-        Predicate<AnyMessage> predicate = messagePredicateParser.parse(filter);
-
         Consumer<Message> defaultListener = createGenericListener(method, obj);
-        return anyMessage -> {
 
-            if (predicate.test(anyMessage))
-                defaultListener.accept(anyMessage.getMessage());
-        };
+        String filter = method.getAnnotation(MessageListener.class).filter();
+
+        if (!filter.equals("")) {
+
+            Predicate<AnyMessage> predicate = messagePredicateParser.parse(filter);
+            return anyMessage -> {
+
+                if (predicate.test(anyMessage))
+                    defaultListener.accept(anyMessage.getMessage());
+            };
+
+        } else {
+
+            return anyMessage -> defaultListener.accept(anyMessage.getMessage());
+        }
     }
 
     @Override

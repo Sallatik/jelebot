@@ -50,8 +50,6 @@ class ParserFactory {
 
         Map<String, Predicate<AnyMessage>> predicateMap = new HashMap<>();
 
-        predicateMap.put("any", message -> true);
-
         predicateMap.put("edit", AnyMessage::isEdited);
 
         predicateMap.put("channel", AnyMessage::isChannelPost);
