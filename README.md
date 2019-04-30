@@ -146,7 +146,11 @@ jelebot.register(new MyBotModule())
     // ...
     .register(new AnotherBotModule());
 ```
-3. Start the bot.
+3. Specify the update source.
+```java
+jelebot.setUpdateSource(new LongPollingUpdateSource());
+```
+4. Start the bot.
 ```java
 jelebot.start();
 ```
@@ -155,19 +159,15 @@ Here is a little bot that can rate your cat pics.
 ```java
 class RateMyCatBot {
     
-    @InjectTelegramBot
-    private TelegramBot bot;
-    
     @MessageListener("private & photo & /rate")
-    SendMessage rateCat(Message message) { 
-        
-        return SendMessage(message.chat().id(),
-        "Your cat is awesome! 10/10");
+    SendMessage rateCat(Message message) {
+        return SendMessage(message.chat().id(), "Your cat is awesome! 10/10");
     }
     
     public static void main(String [] args) {
         Jelebot.create("bot-token")
             .register(new RateMyCatBot())
+            .setUpdateSource(new LongPollingUpdateSource())
             .start();
     }
 }

@@ -36,8 +36,10 @@ class JelebotImpl implements Jelebot {
     }
 
     @Override
-    public void setUpdateSource(UpdateSource updateSource) {
+    public Jelebot setUpdateSource(UpdateSource updateSource) {
+
         this.updateSource = updateSource;
+        return this;
     }
 
     public JelebotImpl(TelegramBot bot, UpdateListener updateListener, RegisterService registerService) {

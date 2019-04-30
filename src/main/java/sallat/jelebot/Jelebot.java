@@ -41,8 +41,10 @@ public interface Jelebot {
 
     /**
      * @param updateSource
+     * @return this instance.
      */
-    void setUpdateSource(UpdateSource updateSource);
+    Jelebot setUpdateSource(UpdateSource updateSource);
+
     /**
      * Create new <code>Jelebot</code> instance with an existing <code>TelegramBot</code>.
      * @param bot existing <code>TelegramBot</code>
@@ -53,7 +55,6 @@ public interface Jelebot {
 
         return JelebotFactory.createJelebot(bot);
     }
-
 
     /**
      * Create new <code>Jelebot</code> instance for your bot token.<br>
