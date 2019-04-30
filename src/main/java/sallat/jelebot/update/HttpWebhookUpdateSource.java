@@ -28,7 +28,6 @@ public class HttpWebhookUpdateSource implements UpdateSource {
      *     <li>Creates a http server that listens on the supplied interface and port.</li>
      *     <li>For every incoming http request on the specified local path, decodes updates, calls <code>onUpdate</code> method on the listener, returns <code>200 OK</code> response.</li>
      * </ol>
-     * Sets webhook for the supplied proxy url
      * @param listener listener that will transfer updates to Jelebot.
      * @param bot telegram bot who's updates should be received.
      */
