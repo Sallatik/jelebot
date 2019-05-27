@@ -17,7 +17,7 @@ Add the following to your `pom.xml` file:
 	<!-- other repositories... --> 
 	<repository>
 		<id>jitpack.io</id>
-		<proxyURL>https://jitpack.io</proxyURL>
+		<url>https://jitpack.io</url>
 	</repository>
 </repositories>
 
