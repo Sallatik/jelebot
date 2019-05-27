@@ -23,7 +23,7 @@ class ListenerFactoryImpl implements ListenerFactory {
         requireSingleParamOfType(method, Message.class, MessageListener.class);
         Consumer<Message> defaultListener = createGenericListener(method, obj);
 
-        String filter = method.getAnnotation(MessageListener.class).filter();
+        String filter = AnnotationUtils.getMethodAnnotation(MessageListener.class, obj.getClass(), method).filter();
 
         if (!filter.equals("")) {
 

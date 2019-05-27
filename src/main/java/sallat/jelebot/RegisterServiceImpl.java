@@ -1,12 +1,15 @@
 package sallat.jelebot;
 
 import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.model.ChosenInlineResult;
 import sallat.jelebot.annotation.InjectTelegramBot;
 import sallat.jelebot.annotation.listeners.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import static sallat.jelebot.AnnotationUtils.*;
 
 class RegisterServiceImpl implements RegisterService {
 
@@ -19,39 +22,47 @@ class RegisterServiceImpl implements RegisterService {
 
         boolean annotationsFound = inject(obj);
 
+        Class<?> clazz = obj.getClass();
         for (Method method : obj.getClass().getDeclaredMethods()) {
 
-            if (method.isAnnotationPresent(MessageListener.class)) {
+            MessageListener messageListener = getMethodAnnotation(MessageListener.class, clazz, method);
+            if (messageListener != null) {
                 listenerManager.addAnyMessageListener(listenerFactory.createMessageListener(obj, method));
                 annotationsFound = true;
             }
 
-            if (method.isAnnotationPresent(InlineQueryListener.class)) {
+            InlineQueryListener inlineQueryListener = getMethodAnnotation(InlineQueryListener.class, clazz, method);
+            if (inlineQueryListener != null) {
                 listenerManager.addInlineQueryListener(listenerFactory.createInlineQueryListener(obj, method));
                 annotationsFound = true;
             }
 
-            if (method.isAnnotationPresent(ChosenInlineResultListener.class)) {
+            ChosenInlineResultListener chosenInlineResultListener = getMethodAnnotation(ChosenInlineResultListener.class, clazz, method);
+            if (chosenInlineResultListener != null) {
                 listenerManager.addChosenInlineResultListener(listenerFactory.createChosenInlineResultListener(obj, method));
                 annotationsFound = true;
             }
 
-            if (method.isAnnotationPresent(CallbackQueryListener.class)) {
+            CallbackQueryListener callbackQueryListener = getMethodAnnotation(CallbackQueryListener.class, clazz, method);
+            if (callbackQueryListener != null) {
                 listenerManager.addCallbackQueryListener(listenerFactory.createCallbackQueryListener(obj, method));
                 annotationsFound = true;
             }
 
-            if (method.isAnnotationPresent(ShippingQueryListener.class)) {
+            ShippingQueryListener shippingQueryListener = getMethodAnnotation(ShippingQueryListener.class, clazz, method);
+            if (shippingQueryListener != null) {
                 listenerManager.addShippingQueryListener(listenerFactory.createShippingQueryListener(obj, method));
                 annotationsFound = true;
             }
 
-            if (method.isAnnotationPresent(PreCheckoutQueryListener.class)) {
+            PreCheckoutQueryListener preCheckoutQueryListener = getMethodAnnotation(PreCheckoutQueryListener.class, clazz, method);
+            if (preCheckoutQueryListener != null) {
                 listenerManager.addPreChekoutQueryListener(listenerFactory.createPreCheckoutQueryListener(obj, method));
                 annotationsFound = true;
             }
 
-            if (method.isAnnotationPresent(PollListener.class)) {
+            PollListener pollListener = getMethodAnnotation(PollListener.class, clazz, method);
+            if (pollListener != null) {
                 listenerManager.addPollListener(listenerFactory.createPollListener(obj, method));
                 annotationsFound = true;
             }

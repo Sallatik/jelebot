@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import sallat.parser.PredicateParser;
 import sallat.jelebot.annotation.listeners.*;
 
+import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 import java.util.function.Consumer;
 
@@ -243,5 +244,25 @@ public class ListenerFactoryTest {
         verify(mockedBot, never()).execute(any());
         pollListener.accept(mock(Poll.class));
         verify(mockedBot).execute(any());
+    }
+
+    @Test
+    void annotatedMethodsInSubclass() throws Throwable {
+
+        class Superclass {
+
+            @MessageListener
+            void listener(Message message) {}
+        }
+
+        class Subclass extends Superclass {
+
+            @Override
+            void listener(Message message) {}
+        }
+
+        Subclass instance = new Subclass();
+        Method method = Subclass.class.getDeclaredMethod("listener", Message.class);
+        listenerFactory.createMessageListener(instance, method);
     }
 }

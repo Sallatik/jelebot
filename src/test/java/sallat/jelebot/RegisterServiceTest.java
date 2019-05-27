@@ -110,6 +110,28 @@ public class RegisterServiceTest {
         assertThrows(IllegalArgumentException.class,
                 () -> registerService.register(new InjectInto()));
     }
+
+    @Test
+    void annotatedMethodsInSubclass() {
+
+        class Superclass {
+
+            @PollListener
+            void listener(){}
+        }
+
+        class Subclass extends Superclass {
+
+            @Override
+            void listener() {}
+        }
+
+        Subclass instance = new Subclass();
+
+        registerService.register(instance);
+        verify(mockedFactory).createPollListener(any(), any());
+        verify(mockedManager).addPollListener(any());
+    }
 }
 
 
