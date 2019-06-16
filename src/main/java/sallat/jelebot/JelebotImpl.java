@@ -1,19 +1,22 @@
 package sallat.jelebot;
 
 import com.pengrad.telegrambot.TelegramBot;
-import sallat.jelebot.update.UpdateListener;
 import sallat.jelebot.update.UpdateSource;
+
+import java.util.concurrent.Executor;
 
 class JelebotImpl implements Jelebot {
 
     private TelegramBot bot;
-    private UpdateListener updateListener;
+    private DispatcherUpdateListener updateListener;
     private RegisterService registerService;
     private UpdateSource updateSource;
+    private boolean started;
 
     @Override
     public Jelebot register(Object obj) {
 
+        requireNotStarted();
         registerService.register(obj);
         return this;
     }
@@ -21,6 +24,7 @@ class JelebotImpl implements Jelebot {
     @Override
     public Jelebot register(Object... objects) {
 
+        requireNotStarted();
         for (Object obj : objects)
             registerService.register(obj);
         return this;
@@ -29,6 +33,7 @@ class JelebotImpl implements Jelebot {
     @Override
     public void start() {
 
+        requireNotStarted();
         if (updateSource == null)
             throw new IllegalStateException("Update source must not be null");
 
@@ -38,11 +43,26 @@ class JelebotImpl implements Jelebot {
     @Override
     public Jelebot setUpdateSource(UpdateSource updateSource) {
 
+        requireNotStarted();
         this.updateSource = updateSource;
         return this;
     }
 
-    public JelebotImpl(TelegramBot bot, UpdateListener updateListener, RegisterService registerService) {
+    @Override
+    public Jelebot setExecutor(Executor executor) {
+
+        requireNotStarted();
+        updateListener.setExecutor(executor);
+        return this;
+    }
+
+    private void requireNotStarted() {
+
+        if (started)
+            throw new IllegalStateException("Already started");
+    }
+
+    public JelebotImpl(TelegramBot bot, DispatcherUpdateListener updateListener, RegisterService registerService) {
 
         this.bot = bot;
         this.updateListener = updateListener;

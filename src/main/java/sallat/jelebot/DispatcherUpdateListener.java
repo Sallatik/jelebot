@@ -3,12 +3,23 @@ package sallat.jelebot;
 import com.pengrad.telegrambot.model.*;
 import sallat.jelebot.update.UpdateListener;
 
+import java.util.concurrent.Executor;
+
 class DispatcherUpdateListener implements UpdateListener {
 
     private ListenerManager listenerManager;
+    private Executor executor;
 
     @Override
     public void onUpdate(Update update) {
+
+        if (executor != null)
+            executor.execute(() -> handleUpdate(update));
+        else
+            handleUpdate(update);
+    }
+
+    private void handleUpdate(Update update) {
 
         if (update.message() != null) {
 
@@ -51,7 +62,10 @@ class DispatcherUpdateListener implements UpdateListener {
             Poll poll = update.poll();
             listenerManager.onPoll(poll);
         }
+    }
 
+    public void setExecutor(Executor executor) {
+        this.executor = executor;
     }
 
     DispatcherUpdateListener(ListenerManager listenerManager) {

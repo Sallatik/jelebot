@@ -16,7 +16,7 @@ class JelebotFactory {
         ListenerFactory listenerFactory = new ListenerFactoryImpl(predicateParser, bot);
         ListenerManager listenerManager = new ListenerManagerImpl();
         RegisterService registerService = new RegisterServiceImpl(listenerFactory, listenerManager, bot);
-        UpdateListener updateListener = new DispatcherUpdateListener(listenerManager);
+        DispatcherUpdateListener updateListener = new DispatcherUpdateListener(listenerManager);
 
         return new JelebotImpl(bot, updateListener, registerService);
     }
