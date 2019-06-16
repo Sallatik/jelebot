@@ -3,6 +3,7 @@ package sallat.jelebot.update;
 import com.pengrad.telegrambot.BotUtils;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.request.DeleteWebhook;
 import com.pengrad.telegrambot.request.SetWebhook;
 import com.sun.net.httpserver.HttpServer;
 
@@ -19,6 +20,8 @@ public class HttpWebhookUpdateSource implements UpdateSource {
     private String proxyURL;
     private String localPath = "/";
     private InetSocketAddress address;
+
+    private HttpServer server;
 
     /**
      * <ol>
@@ -50,10 +53,17 @@ public class HttpWebhookUpdateSource implements UpdateSource {
 
             server.setExecutor(null);
             server.start();
-
+            this.server = server;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void stopGettingUpdates(TelegramBot bot) {
+
+        bot.execute(new DeleteWebhook());
+        server.stop(0);
     }
 
     /**

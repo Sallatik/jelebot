@@ -26,7 +26,7 @@ Add the following to your `pom.xml` file:
 	<dependency>
 		<groupId>com.github.Sallatik</groupId>
 		<artifactId>jelebot</artifactId>
-		<version>1.3.1-SNAPSHOT</version>
+		<version>1.3.3-SNAPSHOT</version>
 	</dependency>
 </dependencies>
 ```
@@ -44,7 +44,7 @@ allprojects {
 }
 
 dependencies {
-    implementation 'com.github.Sallatik:jelebot:1.3.1-SNAPSHOT'
+    implementation 'com.github.Sallatik:jelebot:1.3.3-SNAPSHOT'
 }
 ```
 
@@ -153,6 +153,14 @@ jelebot.setUpdateSource(new LongPollingUpdateSource());
 4. Start the bot.
 ```java
 jelebot.start();
+```
+5. Stop the bot before exiting the application.
+```java
+jelebot.stop();
+```
+or
+```java
+Runtime.addShutdownHook(new Thread(() -> jelebot.stop()));
 ```
 ## Example
 Here is a little bot that can rate your cat pics.

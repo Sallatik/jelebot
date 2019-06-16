@@ -45,6 +45,12 @@ public interface Jelebot {
     void start();
 
     /**
+     * Stops getting updates from telegram by calling {@link UpdateSource#stopGettingUpdates(TelegramBot)}
+     * Once stopped, instance can not be reused.
+     */
+    void stop();
+
+    /**
      * @param updateSource
      * @return this instance.
      * @throws IllegalStateException if called after <code>start()</code>

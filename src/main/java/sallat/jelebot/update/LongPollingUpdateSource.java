@@ -28,4 +28,9 @@ public class LongPollingUpdateSource implements UpdateSource {
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
         });
     }
+
+    @Override
+    public void stopGettingUpdates(TelegramBot bot) {
+        bot.removeGetUpdatesListener();
+    }
 }

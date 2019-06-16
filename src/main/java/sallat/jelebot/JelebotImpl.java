@@ -41,6 +41,15 @@ class JelebotImpl implements Jelebot {
     }
 
     @Override
+    public void stop() {
+
+        if (!started)
+            throw new IllegalStateException("not started");
+
+        updateSource.stopGettingUpdates(bot);
+    }
+
+    @Override
     public Jelebot setUpdateSource(UpdateSource updateSource) {
 
         requireNotStarted();

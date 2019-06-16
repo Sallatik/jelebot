@@ -7,7 +7,6 @@ import com.pengrad.telegrambot.TelegramBot;
  * Implementation is responsible to acquire updates from the telegram server for the supplied <code>TelegramBot</code> and transfer them to Jelebot using supplied {@link UpdateListener}.<br>
  * This should start from when the {@link #startGettingUpdates(UpdateListener, TelegramBot)} is called and continue on.
  */
-@FunctionalInterface
 public interface UpdateSource {
 
     /**
@@ -18,4 +17,9 @@ public interface UpdateSource {
      */
     void startGettingUpdates(UpdateListener listener, TelegramBot bot);
 
+    /**
+     * Stops getting updates from telegram.
+     * @param bot
+     */
+    void stopGettingUpdates(TelegramBot bot);
 }
