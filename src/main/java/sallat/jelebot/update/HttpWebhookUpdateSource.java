@@ -9,8 +9,6 @@ import com.sun.net.httpserver.HttpServer;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * <code>UpdateSource</code> that uses http webhook to receive updates.<br>
@@ -19,7 +17,7 @@ import java.net.URL;
 public class HttpWebhookUpdateSource implements UpdateSource {
 
     private String proxyURL;
-    private String localPath;
+    private String localPath = "/";
     private InetSocketAddress address;
 
     /**
@@ -40,10 +38,6 @@ public class HttpWebhookUpdateSource implements UpdateSource {
             bot.execute(new SetWebhook().url(proxyURL));
             // create server
             HttpServer server = HttpServer.create(address, 10);
-
-            if (localPath == null)
-                localPath = new URL(proxyURL).getPath();
-
             server.createContext(localPath, exchange -> {
 
                 Reader reader = new InputStreamReader(exchange.getRequestBody());
@@ -63,20 +57,20 @@ public class HttpWebhookUpdateSource implements UpdateSource {
     }
 
     /**
-     * Costructor to be used if the proxy is configured to forward requests to a different path.
-     * @param proxyURL url of the https proxy.
-     * @param address your host address.
-     * @param localPath the webhook path.
+     * Sets path part of the url to which requests from proxy are going to be redirected.<br>
+     * For example, if proxy is configured to send requests to http://localhost:1234/mybot, then the path is "mybot".<br>
+     * The default path is "/".
+     * @param localPath path
+     * @return reference to this instance
      */
-    public HttpWebhookUpdateSource(String proxyURL, InetSocketAddress address, String localPath) {
+    public HttpWebhookUpdateSource setLocalPath(String localPath) {
 
-        this(proxyURL, address);
         this.localPath = localPath;
+        return this;
     }
 
     /**
-     * Constructor to be used by default.<br>
-     * Local path will parsed from proxyURL.
+     * Creates <code>HttpWebhookUpdateSource</code> bound to a given <code>InetSocketAddress</code>
      * @param proxyURL url of the https proxy.
      * @param address your host address.
      */
