@@ -26,7 +26,7 @@ Add the following to your `pom.xml` file:
 	<dependency>
 		<groupId>com.github.Sallatik</groupId>
 		<artifactId>jelebot</artifactId>
-		<version>1.3.3-SNAPSHOT</version>
+		<version>1.3.4-SNAPSHOT</version>
 	</dependency>
 </dependencies>
 ```
